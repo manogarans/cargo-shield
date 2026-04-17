@@ -1,0 +1,138 @@
+#include <TinyGPS++.h>
+#include <HardwareSerial.h>
+
+TinyGPSPlus gps;
+
+HardwareSerial gpsSerial(2);   // UART2
+HardwareSerial sim800(1);      // UART1
+
+#define REED_SWITCH 4
+#define BUZZER 5
+
+String latitude="0";
+String longitude="0";
+
+int stopCounter = 0;
+
+void setup() {
+
+Serial.begin(115200);
+
+pinMode(REED_SWITCH, INPUT_PULLUP);
+pinMode(BUZZER, OUTPUT);
+
+gpsSerial.begin(9600, SERIAL_8N1, 16, 17);
+sim800.begin(9600, SERIAL_8N1, 26, 27);
+
+delay(3000);
+
+initGPRS();
+
+}
+
+void loop() {
+
+/* READ GPS */
+
+while (gpsSerial.available()) {
+gps.encode(gpsSerial.read());
+}
+
+if (gps.location.isUpdated()) {
+latitude = String(gps.location.lat(),6);
+longitude = String(gps.location.lng(),6);
+}
+
+/* DOOR STATUS */
+
+String doorStatus;
+
+if(digitalRead(REED_SWITCH)==LOW){
+doorStatus="open";
+digitalWrite(BUZZER, HIGH);
+}
+else{
+doorStatus="closed";
+digitalWrite(BUZZER, LOW);
+}
+
+/* STOP DETECTION */
+
+float speed = gps.speed.kmph();
+
+if(speed < 1){
+stopCounter++;
+}
+else{
+stopCounter = 0;
+}
+
+/* SEND DATA */
+
+sendFirebase(doorStatus);
+
+delay(10000);
+}
+
+/* GPRS INIT */
+
+void initGPRS(){
+
+sendAT("AT",2000);
+sendAT("AT+SAPBR=3,1,\"CONTYPE\",\"GPRS\"",2000);
+sendAT("AT+SAPBR=3,1,\"APN\",\"internet\"",2000);
+sendAT("AT+SAPBR=1,1",3000);
+sendAT("AT+SAPBR=2,1",2000);
+
+}
+
+/* SEND TO FIREBASE */
+
+void sendFirebase(String door){
+
+String url = "https://cargo-security-default-rtdb.firebaseio.com/truck_01.json";
+
+String data = "{";
+data += "\"latitude\":"+latitude+",";
+data += "\"longitude\":"+longitude+",";
+data += "\"door\":\""+door+"\",";
+data += "\"stop_time\":"+String(stopCounter);
+data += "}";
+
+sim800.println("AT+HTTPINIT");
+delay(1000);
+
+sim800.println("AT+HTTPPARA=\"CID\",1");
+delay(1000);
+
+sim800.println("AT+HTTPPARA=\"URL\",\""+url+"\"");
+delay(1000);
+
+sim800.println("AT+HTTPPARA=\"CONTENT\",\"application/json\"");
+delay(1000);
+
+sim800.println("AT+HTTPDATA="+String(data.length())+",10000");
+delay(2000);
+
+sim800.println(data);
+delay(2000);
+
+sim800.println("AT+HTTPACTION=1");
+delay(6000);
+
+sim800.println("AT+HTTPTERM");
+
+}
+
+/* AT COMMAND */
+
+void sendAT(String cmd,int t){
+
+sim800.println(cmd);
+delay(t);
+
+while(sim800.available()){
+Serial.write(sim800.read());
+}
+
+}
