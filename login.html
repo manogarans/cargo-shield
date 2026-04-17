@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Truck Security Login</title>
+
+<style>
+
+body{
+background:#0f172a;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Arial;
+color:white;
+}
+
+.box{
+background:#1e293b;
+padding:40px;
+border-radius:10px;
+width:300px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#22c55e;
+border:none;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Truck Security Login</h2>
+
+<input id="id" placeholder="Truck ID">
+
+<input id="pass" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script>
+
+function login(){
+
+var id=document.getElementById("id").value;
+var pass=document.getElementById("pass").value;
+
+if(id==="truck01" && pass==="1234"){
+
+window.location.href="dashboard.html";
+
+}
+else{
+
+document.getElementById("msg").innerHTML="Invalid Login";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
