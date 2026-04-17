@@ -1,4 +1,4 @@
-<img width="1538" height="895" alt="image" src="https://github.com/user-attachments/assets/0dbcae68-32d3-4ca8-93ae-6aebdd4a3676" /># Cargo Security IoT System 🚚 
+# Cargo Security IoT System 🚚 
 
 ## Overview :
 This project detects cargo theft using IoT sensors and real-time monitoring.
