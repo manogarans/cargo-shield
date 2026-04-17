@@ -1,0 +1,77 @@
+body{
+    margin:0;
+    display:flex;
+    height:100vh;
+    font-family:Arial;
+    }
+    
+    /* LOGIN */
+    
+    .login-body{
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    }
+    
+    .login-box{
+    background:#1e293b;
+    padding:40px;
+    border-radius:10px;
+    width:300px;
+    text-align:center;
+    color:white;
+    }
+    
+    input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    }
+    
+    button{
+    width:100%;
+    padding:10px;
+    background:#22c55e;
+    border:none;
+    color:white;
+    }
+    
+    /* MAP */
+    
+    #map{
+    width:80%;
+    height:100%;
+    }
+    
+    /* PANEL */
+    
+    #panel{
+    width:20%;
+    background:#020617;
+    color:white;
+    padding:20px;
+    }
+
+    #door{
+        width:180px;
+        height:60px;
+        background:red;
+        color:white;
+        font-weight:bold;
+        font-size:22px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        margin-top:20px;
+        border-radius:8px;
+        }
+
+    @keyframes blink{
+    
+    0%{opacity:1;}
+    50%{opacity:0.3;}
+    100%{opacity:1;}
+    
+    }
+    
