@@ -25,3 +25,4 @@ This project detects cargo theft using IoT sensors and real-time monitoring.
 
 ## Architecture
 Sensors → ESP32 → GSM → Firebase → Web Dashboard
+
